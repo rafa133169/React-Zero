@@ -1,0 +1,36 @@
+/* src/components/Header.css */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+  }
+  
+  .header-container {
+    margin-top: 50px;
+    margin-left: 20px; /* Ajusta el margen izquierdo según sea necesario */
+    margin-right: 20px; /* Ajusta el margen derecho según sea necesario */
+  }
+  
+  .header {
+    background-color: #3498DB;
+    padding: 25px 50px; /* Ajusta el padding para hacer más ancho el Header */
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header-title {
+    color: #000;
+    font-size: 18px;
+  }
+  
+  .logout-button {
+    background-color: #00B894;
+    color: #000;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+  

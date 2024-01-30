@@ -1,0 +1,43 @@
+/* src/components/Table/Table.css */
+table {
+  width: calc(100% - 40px);
+  border-collapse: collapse;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #25B4A2; /* Actualizado al color verde suave */
+}
+
+
+
+
+th, td {
+  border: none; /* Elimina las líneas de las celdas */
+  padding: 10px; /* Ajusta el espaciado interno de las celdas */
+  text-align: left;
+}
+
+.additional-table {
+  width: calc(100% - 40px);
+  border-collapse: collapse;
+  margin: 0 auto;
+  margin-top: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #25B4A2; /* Actualizado al color verde suave */
+}
+/* src/components/Table/Table.css */
+button.add-button {
+  background-color: #00B894;
+  color: #000;
+  padding: 10px 20px; /* Ajustar el padding para hacer el botón más compacto */
+  border: none; /* Elimina el borde del botón */
+  border-radius: 15px; /* Ajustar el radio de los bordes del botón */
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px; /* Ajusta la separación superior */
+  margin-right: 20px; /* Ajusta el margen derecho para alejar del borde */
+  margin-bottom: 10px; /* Ajusta la separación desde la parte inferior */
+  float: right; /* Alinea el botón a la derecha */
+}

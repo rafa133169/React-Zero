@@ -1,0 +1,77 @@
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #fff;
+}
+
+.login-card {
+    background-color: #3498DB;
+    padding: 100px 50px; /* Aumentar el padding en la parte superior e inferior */
+    border-radius: 42px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 400px;
+    margin: 50px auto;
+    border: 10px solid #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.login-title,
+.login-subtitle,
+label,
+input {
+    color: #000;
+}
+
+.input-group {
+    margin: 20px 0;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+input::placeholder {
+    color: transparent;
+}
+
+.login-button {
+    background-color: #00B894;
+    color: #000; /* Color del texto en negro */
+    padding: 14px 20px; /* Ajustar el padding para estirar el botón */
+    border: none;
+    border-radius: 50px; /* Redondear más los bordes */
+    cursor: pointer;
+    font-size: 16px; /* Tamaño del texto más pequeño */
+    font-weight: normal; /* No en negrita */
+}
+
+.login-button:hover {
+    background-color: #00876F;
+    color: #000; /* Color del texto en negro al pasar el ratón */
+}
+/* Estirar solo la parte superior */
+.login-card-top {
+    padding: 100px 50px 20px 50px;
+}
+
+/* Estirar solo la parte inferior */
+.login-card-bottom {
+    padding: 20px 50px 100px 50px; /* Aumentar el padding en la parte inferior */
+}

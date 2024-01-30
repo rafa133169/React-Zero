@@ -1,0 +1,27 @@
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: transparent;
+  padding: 20px; /* Ajustar el espacio alrededor de la container */
+  width: 90%; /* Ajustar el ancho de la container */
+  margin: 30px auto; /* Ajustar el margen para mayor separación del header */
+}
+
+.button {
+  background-color: #ccc; /* Color gris solo para el botón */
+  color: #000; /* Color del texto en negro */
+  padding: 20px 40px; /* Aumentar el tamaño de los botones */
+  border: none;
+  border-radius: 10px; /* Reducir el radio para menos redondeado */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold; /* Texto en negrita */
+}
+
+.button:last-child {
+  margin-right: 0;
+}
+
+.button:hover {
+  background-color: #00B894;
+}
