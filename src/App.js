@@ -1,34 +1,35 @@
-import React, { useState } from 'react';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import Buttons from './components/Buttons/Buttons';
 import Table from './components/Table/Table';
-import ServicesTable from './components/ServicesTable/ServicesTable'; // Añade la importación de ServicesTable
+import ServicesTable from './components/ServicesTable/ServicesTable';
+import PartsTable from './components/PartsTable/PartsTable';
+import Tablas from './components/TableMecanical/TableMecanical';
+
+// Elimina el componente Dashboard, ya que no lo necesitas
 
 function App() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const [currentView, setCurrentView] = useState('Mecánicos'); // Nuevo estado para gestionar la vista
-
   const handleLogin = () => {
-    setLoggedIn(true);
-  };
-
-  const handleLogout = () => {
-    setLoggedIn(false);
-  };
-
-  const handleViewChange = (view) => {
-    setCurrentView(view);
+    // Lógica de inicio de sesión aquí
+    console.log('Usuario ha iniciado sesión');
   };
 
   return (
     <div className="App">
-      {!isLoggedIn && <Login onLogin={handleLogin} />}
-      {isLoggedIn && <Header onLogout={handleLogout} />}
-      {isLoggedIn && <Buttons onViewChange={handleViewChange} />} {/* Pasa la función de cambio de vista */}
-      {isLoggedIn && currentView === 'Mecánicos' && <Table />}
-      {isLoggedIn && currentView === 'Servicios' && <ServicesTable />} {/* Cambia a ServicesTable */}
+      <Router>
+        <Routes>
+        <Route path="/" element={<Login onLogin={handleLogin} />} />
+          <Route path="/Header" element={<Header />} />
+          <Route path="/Buttons" element={<Buttons />} />
+          <Route path="/Mecanicos" element={<Table />} />
+          <Route path="/Servicios" element={<ServicesTable />} />
+          <Route path="/Piezas" element={<PartsTable />} />
+
+          <Route path='/VistaMec' element={<Tablas/>} />
+        </Routes>
+      </Router>
     </div>
   );
 }

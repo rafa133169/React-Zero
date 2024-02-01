@@ -1,0 +1,78 @@
+/* styles.css */
+
+.my-table {
+    border-collapse: collapse;
+    border: 1px solid #2d2d2d;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  .my-table th,
+  .my-table td {
+    border: 1px solid #2d2d2d;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  
+  .my-table th {
+    background-color: #56a88d;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .my-table tbody tr:nth-child(even) {
+    background-color: #f3f3f3;
+  }
+  
+  .my-table a {
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .my-table a:hover {
+    text-decoration: underline;
+  }
+  
+  .table-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem;
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .add-button-row {
+    background-color: #27a9ae;
+    color: white;
+  }
+  
+  .add-button {
+    background-color: #2eb4cc;
+    color: rgb(255, 255, 255);
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+  
+  .add-button:hover {
+    background-color: #0099ff;
+  }
+  
+  /* Estilos específicos para celdas con clase */
+  .add-button-row th {
+    text-align: left;
+  }
+  
+  .add-button-row .add-button {
+    margin-left: 10px; /* Ajusta el espacio entre el botón y el borde izquierdo */
+  }
+  
+  .table-title-cell {
+    text-align: center;
+  }
+  

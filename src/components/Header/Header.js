@@ -1,13 +1,15 @@
-// src/components/Header.js
 import React from 'react';
 import './Header.css';
+import { Link } from 'react-router-dom';
 
-const Header = ({ onLogout }) => {
+const Header = () => {
   return (
     <div className="header-container">
       <div className="header">
         <div className="header-title">Taller-TECH</div>
-        <button className="logout-button" onClick={onLogout}>Cerrar Sesión</button>
+        <Link to='/'>
+        <button className="logout-button">Cerrar Sesión</button>
+        </Link>
       </div>
     </div>
   );

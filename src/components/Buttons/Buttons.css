@@ -2,26 +2,26 @@
   display: flex;
   justify-content: space-between;
   background-color: transparent;
-  padding: 20px; /* Ajustar el espacio alrededor de la container */
-  width: 90%; /* Ajustar el ancho de la container */
-  margin: 30px auto; /* Ajustar el margen para mayor separación del header */
+  padding: 20px;
+  width: 90%;
+  margin: 30px auto;
 }
 
 .button {
-  background-color: #ccc; /* Color gris solo para el botón */
-  color: #000; /* Color del texto en negro */
-  padding: 20px 40px; /* Aumentar el tamaño de los botones */
+  background-color: #ccc;
+  color: #000;
+  padding: 20px 40px;
   border: none;
-  border-radius: 10px; /* Reducir el radio para menos redondeado */
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-weight: bold; /* Texto en negrita */
+  font-weight: bold;
 }
 
 .button:last-child {
   margin-right: 0;
 }
 
-.button:hover {
+.button.selected {
   background-color: #00B894;
 }

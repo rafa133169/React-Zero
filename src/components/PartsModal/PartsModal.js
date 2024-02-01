@@ -1,25 +1,23 @@
-// ServicesModal.js
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import './ServicesModal.css';
-import Buttons from '../Buttons/Buttons';
+import './PartsModal.css';
 
-const ServicesModal = ({ service, onCloseModal, onSave }) => {
+const PartsModal = ({ row, onCloseModal, onSave }) => {
   const [formData, setFormData] = useState({
-    serviceName: '',
-    description: '',
-    price: 0,
+    partName: '',
+    quantity: '',
+    price: '',
   });
 
   useEffect(() => {
-    if (service) {
+    if (row) {
       setFormData({
-        serviceName: service.serviceName || '',
-        description: service.description || '',
-        price: service.price || 0,
+        partName: row.partName || '',
+        quantity: row.quantity || '',
+        price: row.price || '',
       });
     }
-  }, [service]);
+  }, [row]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +28,7 @@ const ServicesModal = ({ service, onCloseModal, onSave }) => {
   };
 
   const handleSave = () => {
-    onSave(service.id, formData);
+    onSave(row.id, formData);
     onCloseModal();
   };
 
@@ -42,23 +40,23 @@ const ServicesModal = ({ service, onCloseModal, onSave }) => {
     <div className="modal-overlay">
       <div className="modal-content">
         <span className="close" onClick={handleCancel}>&times;</span>
-        <h2>Actualizar Servicio</h2>
+        <h2>Editar Información</h2>
         <form>
           <div className="input-group">
-            <label>Servicio:</label>
+            <label>Pieza:</label>
             <input
               type="text"
-              name="serviceName"
-              value={formData.serviceName}
+              name="partName"
+              value={formData.partName}
               onChange={handleInputChange}
             />
           </div>
           <div className="input-group">
-            <label>Descripción:</label>
+            <label>Cantidad:</label>
             <input
               type="text"
-              name="description"
-              value={formData.description}
+              name="quantity"
+              value={formData.quantity}
               onChange={handleInputChange}
             />
           </div>
@@ -81,10 +79,10 @@ const ServicesModal = ({ service, onCloseModal, onSave }) => {
   );
 };
 
-ServicesModal.propTypes = {
-  service: PropTypes.object,
+PartsModal.propTypes = {
+  row: PropTypes.object,
   onCloseModal: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
 
-export default ServicesModal;
+export default PartsModal;

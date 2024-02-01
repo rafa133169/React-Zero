@@ -1,16 +1,13 @@
-// ServicesTable.js
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import ServicesModal from '../ServicesModal/ServicesModal'; // Asegúrate de ajustar la ruta según la estructura de tu proyecto
+import ServicesModal from '../ServicesModal/ServicesModal';
 import './ServicesTable.css';
+import Buttons from '../Buttons/Buttons';
+import Header from '../Header/Header';
 
 const ServicesTable = () => {
-  const [services, setServices] = useState([
-    { id: 1, serviceName: '', description: '', price:'0'},
-    // Agrega más servicios según sea necesario
-  ]);
-
+  const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
 
@@ -30,6 +27,7 @@ const ServicesTable = () => {
       serviceName: '',
       description: '',
       price: 0,
+      edited: [true, true, true],
     };
 
     setServices([...services, newService]);
@@ -41,16 +39,40 @@ const ServicesTable = () => {
   };
 
   const handleSaveService = (id, newData) => {
-    // Actualiza los datos en la tabla
     const updatedServices = services.map((service) =>
       service.id === id ? { ...service, ...newData } : service
     );
     setServices(updatedServices);
   };
 
+  const handleInputChange = (service, field, value, index) => {
+    const updatedServices = services.map((s) => {
+      if (s.id === service.id) {
+        const newEdited = [...s.edited];
+        newEdited[index] = true;
+        return { ...s, [field]: value, edited: newEdited };
+      }
+      return s;
+    });
+    setServices(updatedServices);
+  };
+
+  const handleBlur = (service, index) => {
+    const updatedServices = services.map((s) => {
+      if (s.id === service.id) {
+        const newEdited = [...s.edited];
+        newEdited[index] = false;
+        return { ...s, edited: newEdited };
+      }
+      return s;
+    });
+    setServices(updatedServices);
+  };
+
   return (
     <div>
-      {/* Contenido de la tabla de servicios */}
+      <Header />
+      <Buttons />
       <table className="services-table">
         <thead>
           <tr>
@@ -66,27 +88,27 @@ const ServicesTable = () => {
                 <input
                   type="text"
                   value={service.serviceName}
-                  onChange={(e) =>
-                    handleSaveService(service.id, { serviceName: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange(service, 'serviceName', e.target.value, 0)}
+                  onBlur={() => handleBlur(service, 0)}
+                  readOnly={!service.edited[0]}
                 />
               </td>
               <td>
                 <input
                   type="text"
                   value={service.description}
-                  onChange={(e) =>
-                    handleSaveService(service.id, { description: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange(service, 'description', e.target.value, 1)}
+                  onBlur={() => handleBlur(service, 1)}
+                  readOnly={!service.edited[1]}
                 />
               </td>
               <td>
                 <input
                   type="text"
                   value={service.price}
-                  onChange={(e) =>
-                    handleSaveService(service.id, { price: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange(service, 'price', e.target.value, 2)}
+                  onBlur={() => handleBlur(service, 2)}
+                  readOnly={!service.edited[2]}
                 />
               </td>
               <td>

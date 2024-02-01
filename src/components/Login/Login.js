@@ -1,12 +1,36 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
+
+    // Verifica si se han ingresado datos
+    if (!email || !password) {
+      alert('Por favor, ingresa tu correo y contraseña');
+      return;
+    }
+
+    // Credenciales ficticias para las pruebas
+    const adminCredentials = { email: 'admin@mecanicos.com', password: 'admin' };
+    const mecanicoCredentials = { email: 'mecanico@mecanicos.com', password: 'mecanico' };
+
+    // Verifica las credenciales aquí
+    if (email === adminCredentials.email && password === adminCredentials.password) {
+      navigate('/Mecanicos');
+    } else if (email === mecanicoCredentials.email && password === mecanicoCredentials.password) {
+      navigate('/VistaMec');
+    } else {
+      // Lógica para manejar credenciales incorrectas
+      alert('Credenciales incorrectas');
+    }
+
+    // Llama a la función onLogin si es necesario
     onLogin();
   };
 
@@ -41,6 +65,6 @@ const Login = ({ onLogin }) => {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
