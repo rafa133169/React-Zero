@@ -1,13 +1,19 @@
 // Tablas.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NavBar from './navbar' // Importa el componente NavBar
-import AgregarDatosModal from './modal'; // Importa el componente AgregarDatosModal
-import './styles.css'; // Importa el archivo CSS
+import NavBar from './navbar';
+import AgregarDatosModal from './modal';
+import EditarDatosModal from './modalEditar';
+import './styles.css';
 
-function Tablas() {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+
+function TableMecanical() {
   const [data, setData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showAgregarModal, setShowAgregarModal] = useState(false);
+  const [showEditarModal, setShowEditarModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -22,58 +28,82 @@ function Tablas() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/Taller/${id}`);
+      // Filtra los datos para excluir el elemento con el ID dado
+      setData((prevData) => prevData.filter((row) => row.id !== id));
 
-      if (response.status === 200) {
-        alert('Se borró correctamente');
-      } else {
-        alert('Sucedió un error');
-      }
-
-      fetchUsers();
+      alert('Se borró correctamente');
     } catch (error) {
-      console.error('Error al eliminar datos de la API', error);
+      console.error('Error al eliminar datos', error);
+      alert('Sucedió un error');
     }
   };
 
-  const handleOpenModal = () => {
-    setShowModal(true);
+  const handleOpenAgregarModal = () => {
+    setShowAgregarModal(true);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseAgregarModal = () => {
+    setShowAgregarModal(false);
   };
 
-  const handleAgregarDatos = (nuevosDatos) => {
-    // Implementa la lógica para agregar los nuevos datos a tu API
-    // Luego cierra la ventana modal
-    fetchUsers();
-    handleCloseModal();
+    const handleAgregarDatos = (nuevosDatos) => {
+      // Implementa la lógica para agregar los nuevos datos a tu API
+      // Luego cierra la ventana modal
+      // En este punto, puedes agregar nuevosDatos directamente a tu array de datos
+      setData([...data, nuevosDatos]);
+      handleCloseAgregarModal();
+    };
+
+  const handleOpenEditarModal = (row) => {
+    setSelectedRow(row);
+    setShowEditarModal(true);
   };
+
+  const handleCloseEditarModal = () => {
+    setSelectedRow(null);
+    setShowEditarModal(false);
+  };
+
+  const handleEditarDatos = (datosEditados) => {
+    try {
+      // Actualiza los datos directamente en el estado local
+      setData((prevData) =>
+        prevData.map((row) =>
+          row.id === selectedRow.id ? { ...row, ...datosEditados } : row
+        )
+      );
+
+      alert('Se editó correctamente');
+
+      // Cierra el modal de edición
+      handleCloseEditarModal();
+    } catch (error) {
+      console.error('Error al editar datos', error);
+    }
+  };
+
 
   return (
     <div>
-      <NavBar onOpenModal={handleOpenModal} />
-      {showModal && (
-      <AgregarDatosModal onClose={handleCloseModal} onAgregarDatos={handleAgregarDatos} />
+      <NavBar onOpenAgregarModal={handleOpenAgregarModal} />
+      {showAgregarModal && (
+        <AgregarDatosModal onClose={handleCloseAgregarModal} onAgregarDatos={handleAgregarDatos} />
       )}
+      {showEditarModal && (
+        <EditarDatosModal
+          onClose={handleCloseEditarModal}
+          onEditarDatos={handleEditarDatos}
+          selectedRow={selectedRow}
+        />
+      )}
+      <button className="add-button" onClick={handleOpenAgregarModal}>
+        Agregar Servicio
+      </button>
       <div className="flex justify-center">
         <table className="my-table">
           <thead>
-            <tr>
-              <th colSpan="11" className="table-title-cell">
-                Lista de Lotes
-              </th>
-            </tr>
-            <tr className="add-button-row">
-              <th colSpan="11" className="add-button-cell">
-                <button className="add-button" onClick={handleOpenModal}>
-                  Agregar Servicio
-                </button>
-              </th>
-            </tr>
             <tr>
               <th>#</th>
               <th>Nombre Cliente</th>
@@ -81,38 +111,43 @@ function Tablas() {
               <th>Servicio</th>
               <th>Piezas</th>
               <th>Comentarios</th>
-              <th>Valor Pieza</th>
               <th>Tiempo</th>
-              <th>Precio Total</th>
+              <th>Costo Total</th>
               <th>Estatus</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Carlos R.</td>
-              <td>Mazda</td>
-              <td>Mantenimiento</td>
-              <td>Bujías</td>
-              <td>Cambiar bujías</td>
-              <td>345$</td>
-              <td>00:00:00</td>
-              <td>345$</td>
-              <td>En proceso</td>
-              <td>
-                <a className="edit-link">Editar</a>
-                {"    "}
-                <a className="delete-link" onClick={() => handleDelete(1)}>
-                  Eliminar
-                </a>
-              </td>
-            </tr>
+            {data.map((row, index) => (
+              <tr key={index}>
+                <th scope="row">{index + 1}</th>
+                <td>{row.nombreCliente}</td>
+                <td>{row.modeloVehiculo}</td>
+                <td>{row.servicio}</td>
+                <td>{row.piezas}</td>
+                <td>{row.comentarios}</td>
+                <td>{row.tiempo}</td>
+                <td>{row.costoTotal}</td>
+                <td>{row.estatus}</td>
+                <td>
+                  <button className="icon-button" onClick={() => handleOpenEditarModal(row)}>
+                    <FontAwesomeIcon icon={faEdit} />
+                  </button>
+                  {"    "}
+                  <button className="icon-button" onClick={() => handleDelete(row.id)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
+      </div>
+      <div className="add-button-row">
+        <div className="add-button-cell"></div>
       </div>
     </div>
   );
 }
 
-export default Tablas;
+export default TableMecanical;

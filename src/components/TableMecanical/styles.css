@@ -76,3 +76,11 @@
     text-align: center;
   }
   
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    color: #007bff; /* Color del icono (puedes ajustar según tus preferencias) */
+  }
+  
