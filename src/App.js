@@ -8,11 +8,9 @@ import ServicesTable from './components/ServicesTable/ServicesTable';
 import PartsTable from './components/PartsTable/PartsTable';
 import Tablas from './components/TableMecanical/TableMecanical';
 
-// Elimina el componente Dashboard, ya que no lo necesitas
 
 function App() {
   const handleLogin = () => {
-    // Lógica de inicio de sesión aquí
     console.log('Usuario ha iniciado sesión');
   };
 

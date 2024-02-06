@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+// PartsTable.js
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import PartsModal from '../PartsModal/PartsModal';
+import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import NuevoModal from './NuevoModalParts';
+import EditarModal from './EditarModal';
 import './PartsTable.css';
 import Buttons from '../Buttons/Buttons';
 import Header from '../Header/Header';
@@ -10,63 +12,75 @@ const PartsTable = () => {
   const [parts, setParts] = useState([]);
   const [selectedPart, setSelectedPart] = useState(null);
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
+  const [isAddModalVisible, setAddModalVisible] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/piezas');
+      const data = await response.json();
+      const partsWithEdited = data.map((part) => ({ ...part, edited: [false, false, false] }));
+      setParts(partsWithEdited);
+    } catch (error) {
+      console.error('Error al obtener datos del servidor:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleModalClose = () => {
     setSelectedPart(null);
     setUpdateModalVisible(false);
+    setAddModalVisible(false);
   };
 
   const handleAddPart = () => {
-    const newPart = {
-      id: parts.length + 1,
-      partName: '',
-      quantity: '',
-      price: '',
-      edited: [true, true, true],
-    };
-
-    setParts([...parts, newPart]);
+    setAddModalVisible(true);
   };
 
-  const handleDeletePart = (part) => {
-    const updatedParts = parts.filter((p) => p.id !== part.id);
-    setParts(updatedParts);
-  };
+  const handleDeletePart = async (part) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/piezas/${part.id}`, {
+        method: 'DELETE',
+      });
 
-  const handleSavePart = (id, newData) => {
-    const updatedParts = parts.map((part) =>
-      part.id === id ? { ...part, ...newData } : part
-    );
-    setParts(updatedParts);
-  };
-
-  const handleInputChange = (part, field, value, index) => {
-    const updatedParts = parts.map((p) => {
-      if (p.id === part.id) {
-        const newEdited = [...p.edited];
-        newEdited[index] = true;
-        return { ...p, [field]: value, edited: newEdited };
+      if (response.ok) {
+        fetchData();
+      } else {
+        console.error('Error al eliminar pieza:', response.statusText);
       }
-      return p;
-    });
-    setParts(updatedParts);
+    } catch (error) {
+      console.error('Error al eliminar pieza:', error.message);
+    }
   };
 
-  const handleBlur = (part, index) => {
-    const updatedParts = parts.map((p) => {
-      if (p.id === part.id) {
-        const newEdited = [...p.edited];
-        newEdited[index] = false;
-        return { ...p, edited: newEdited };
-      }
-      return p;
-    });
-    setParts(updatedParts);
-  };
-
-  const handleUpdateModal = (part) => {
+  const handleUpdatePart = (part) => {
     setSelectedPart(part);
     setUpdateModalVisible(true);
+  };
+
+  const handleSavePart = async (formData) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/piezas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al enviar datos al servidor');
+      }
+
+      const result = await response.json();
+      console.log('Respuesta del servidor:', result);
+
+      fetchData();
+    } catch (error) {
+      console.error('Error al enviar datos al servidor:', error);
+    }
   };
 
   return (
@@ -79,40 +93,23 @@ const PartsTable = () => {
             <th>Pieza</th>
             <th>Cantidad</th>
             <th>Precio</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {parts.map((part) => (
             <tr key={part.id}>
               <td>
-                <input
-                  type="text"
-                  value={part.partName}
-                  onChange={(e) => handleInputChange(part, 'partName', e.target.value, 0)}
-                  onBlur={() => handleBlur(part, 0)}
-                  readOnly={!part.edited[0]}
-                />
+                <input type="text" value={part.nombre_pieza} readOnly />
               </td>
               <td>
-                <input
-                  type="text"
-                  value={part.quantity}
-                  onChange={(e) => handleInputChange(part, 'quantity', e.target.value, 1)}
-                  onBlur={() => handleBlur(part, 1)}
-                  readOnly={!part.edited[1]}
-                />
+                <input type="text" value={part.cantidad} readOnly />
               </td>
               <td>
-                <input
-                  type="text"
-                  value={part.price}
-                  onChange={(e) => handleInputChange(part, 'price', e.target.value, 2)}
-                  onBlur={() => handleBlur(part, 2)}
-                  readOnly={!part.edited[2]}
-                />
+                <input type="text" value={part.costo} readOnly />
               </td>
               <td>
-                <button onClick={() => handleUpdateModal(part)}>
+                <button onClick={() => handleUpdatePart(part)}>
                   <FontAwesomeIcon icon={faEdit} />
                 </button>
                 <button onClick={() => handleDeletePart(part)}>
@@ -124,19 +121,65 @@ const PartsTable = () => {
         </tbody>
       </table>
 
-      {/* Botón Agregar Pieza */}
       <button className="add-button" onClick={handleAddPart}>
-        Agregar Pieza
+        <FontAwesomeIcon icon={faPlus} /> Agregar Pieza
       </button>
 
-      {/* Modal de actualización de pieza */}
-      {isUpdateModalVisible && (
-        <PartsModal
-          row={selectedPart}
+      {isAddModalVisible && (
+        <NuevoModal
           onCloseModal={handleModalClose}
-          onSave={(formData) => {
-            handleSavePart(selectedPart.id, formData);
-            handleModalClose();
+          onSave={async (formData) => {
+            try {
+              const response = await fetch('http://localhost:3001/api/piezas', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+              });
+
+              if (!response.ok) {
+                throw new Error('Error al enviar datos al servidor');
+              }
+
+              const result = await response.json();
+              console.log('Respuesta del servidor:', result);
+
+              fetchData();
+              setAddModalVisible(false);
+            } catch (error) {
+              console.error('Error al enviar datos al servidor:', error);
+            }
+          }}
+        />
+      )}
+
+      {isUpdateModalVisible && selectedPart && (
+        <EditarModal
+          part={selectedPart}
+          onCloseModal={() => setUpdateModalVisible(false)}
+          onSave={async (formData) => {
+            try {
+              const response = await fetch(`http://localhost:3001/api/piezas/${selectedPart.id}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+              });
+
+              if (!response.ok) {
+                throw new Error('Error al enviar datos al servidor');
+              }
+
+              const result = await response.json();
+              console.log('Respuesta del servidor:', result);
+
+              fetchData();
+              setUpdateModalVisible(false);
+            } catch (error) {
+              console.error('Error al enviar datos al servidor:', error);
+            }
           }}
         />
       )}

@@ -1,49 +1,146 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import ServicesModal from '../ServicesModal/ServicesModal';
-import './ServicesTable.css';
-import Buttons from '../Buttons/Buttons';
-import Header from '../Header/Header';
+// ServicesTable.js
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
+import EditModal from "./Editmodal";
+import NewModal from "./NewServicesModal";
+import "./ServicesTable.css";
+import Buttons from "../Buttons/Buttons";
+import Header from "../Header/Header";
 
 const ServicesTable = () => {
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
+  const [isEditModalVisible, setEditModalVisible] = useState(false);
+  const [isNewModalVisible, setNewModalVisible] = useState(false);
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
+
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/api/servicios");
+      const data = await response.json();
+      const servicesWithEdited = data.map((service) => ({
+        ...service,
+        edited: [false, false, false],
+      }));
+      setServices(servicesWithEdited);
+    } catch (error) {
+      console.error("Error al obtener datos del servidor:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []); // Ejecutar una vez al montar el componente
 
   const handleUpdateClick = (service) => {
     setSelectedService(service);
-    setUpdateModalVisible(true);
+    setEditModalVisible(true);
   };
 
   const handleModalClose = () => {
-    setSelectedService(null);
-    setUpdateModalVisible(false);
+    setEditModalVisible(false);
+    setSelectedService(null); // Reinicia el servicio seleccionado
   };
 
   const handleAddService = () => {
-    const newService = {
-      id: services.length + 1,
-      serviceName: '',
-      description: '',
-      price: 0,
-      edited: [true, true, true],
-    };
-
-    setServices([...services, newService]);
+    setSelectedService(null); // Reinicia el servicio seleccionado
+    setNewModalVisible(true);
   };
 
-  const handleDeleteService = (service) => {
-    const updatedServices = services.filter((s) => s.id !== service.id);
-    setServices(updatedServices);
+  const handleDeleteService = async (service) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/servicios/${service.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const result = await response.json();
+      console.log("Respuesta del servidor:", result);
+      if (response.ok) {
+        fetchData(); // Actualiza la tabla después de eliminar un servicio
+      } else {
+        console.error("Error al eliminar servicio:", result.error);
+      }
+    } catch (error) {
+      console.error("Error al eliminar servicio:", error.message);
+    }
   };
 
-  const handleSaveService = (id, newData) => {
-    const updatedServices = services.map((service) =>
-      service.id === id ? { ...service, ...newData } : service
-    );
-    setServices(updatedServices);
+  const handleSaveService = async (service) => {
+    try {
+      let response;
+  
+      if (selectedService) {
+        // Actualizar servicio existente
+        response = await fetch(`http://localhost:3001/api/servicios/${service.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(service),
+        });
+      } else {
+        // Agregar nuevo servicio
+        response = await fetch('http://localhost:3001/api/servicios', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(service),
+        });
+      }
+  
+      if (!response.ok) {
+        throw new Error('Error al enviar datos al servidor');
+      }
+  
+      const result = await response.json();
+      console.log('Respuesta del servidor:', result);
+  
+      // Actualiza el estado solo si la persistencia fue exitosa
+      if (selectedService) {
+        const updatedServices = services.map((s) =>
+          s.id === service.id ? { ...service, edited: [false, false, false] } : s
+        );
+        setServices(updatedServices);
+      } else {
+        setServices([...services, { ...service, id: result.id, edited: [false, false, false] }]);
+        setUpdateModalVisible(false);
+      }
+    } catch (error) {
+      console.error('Error al enviar datos al servidor:', error);
+    }
   };
+  
+
+  const handleSaveNewService = async (newData) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/servicios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al enviar datos al servidor');
+      }
+  
+      const result = await response.json();
+      console.log('Respuesta del servidor:', result);
+  
+      // Actualiza el estado solo si la persistencia fue exitosa
+      setServices([...services, { ...newData, id: result.id, edited: [false, false, false] }]);
+      setNewModalVisible(false);
+    } catch (error) {
+      console.error('Error al enviar datos al servidor:', error);
+    }
+  };
+  
 
   const handleInputChange = (service, field, value, index) => {
     const updatedServices = services.map((s) => {
@@ -59,12 +156,9 @@ const ServicesTable = () => {
 
   const handleBlur = (service, index) => {
     const updatedServices = services.map((s) => {
-      if (s.id === service.id) {
-        const newEdited = [...s.edited];
-        newEdited[index] = false;
-        return { ...s, edited: newEdited };
-      }
-      return s;
+      const newEdited = [...s.edited];
+      newEdited[index] = false;
+      return { ...s, edited: newEdited };
     });
     setServices(updatedServices);
   };
@@ -79,6 +173,7 @@ const ServicesTable = () => {
             <th>Servicio</th>
             <th>Descripción</th>
             <th>Precio</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -87,17 +182,26 @@ const ServicesTable = () => {
               <td>
                 <input
                   type="text"
-                  value={service.serviceName}
-                  onChange={(e) => handleInputChange(service, 'serviceName', e.target.value, 0)}
+                  value={service.servicio_nombre}
+                  onChange={(e) =>
+                    handleInputChange(
+                      service,
+                      "servicio_nombre",
+                      e.target.value,
+                      0
+                    )
+                  }
                   onBlur={() => handleBlur(service, 0)}
-                  readOnly={!service.edited[0]}
+                  readOnly={!service.edited || !service.edited[0]}
                 />
               </td>
               <td>
                 <input
                   type="text"
-                  value={service.description}
-                  onChange={(e) => handleInputChange(service, 'description', e.target.value, 1)}
+                  value={service.descripcion}
+                  onChange={(e) =>
+                    handleInputChange(service, "descripcion", e.target.value, 1)
+                  }
                   onBlur={() => handleBlur(service, 1)}
                   readOnly={!service.edited[1]}
                 />
@@ -105,8 +209,10 @@ const ServicesTable = () => {
               <td>
                 <input
                   type="text"
-                  value={service.price}
-                  onChange={(e) => handleInputChange(service, 'price', e.target.value, 2)}
+                  value={service.precio}
+                  onChange={(e) =>
+                    handleInputChange(service, "precio", e.target.value, 2)
+                  }
                   onBlur={() => handleBlur(service, 2)}
                   readOnly={!service.edited[2]}
                 />
@@ -124,14 +230,19 @@ const ServicesTable = () => {
         </tbody>
       </table>
 
-      {/* Botón Agregar Servicio */}
       <button className="add-button" onClick={handleAddService}>
-        Agregar Servicio
+        <FontAwesomeIcon icon={faPlus} /> Agregar Servicio
       </button>
 
-      {/* Modal de actualización de servicio */}
-      {isUpdateModalVisible && (
-        <ServicesModal
+      {isNewModalVisible && (
+        <NewModal
+          onCloseModal={() => setNewModalVisible(false)}
+          onSave={handleSaveNewService}
+        />
+      )}
+
+      {isEditModalVisible && selectedService && (
+        <EditModal
           service={selectedService}
           onCloseModal={handleModalClose}
           onSave={handleSaveService}

@@ -1,13 +1,13 @@
-// EditarDatosModal.js
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import './AgregarDatosModal.css';
 
 function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
   const [formData, setFormData] = useState({
     nombreCliente: "",
     modeloVehiculo: "",
-    servicio: "",
-    piezas: "",
+    servicioId: "",  // Usar el ID del servicio en lugar del nombre
+    piezaId: "",     // Usar el ID de la pieza en lugar del nombre
     comentarios: "",
     valorPieza: "",
     tiempo: "",
@@ -15,13 +15,16 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
     estatus: "",
   });
 
+  const [servicios, setServicios] = useState([]);
+  const [piezas, setPiezas] = useState([]);
+
   useEffect(() => {
     if (selectedRow) {
       setFormData({
         nombreCliente: selectedRow.nombreCliente,
         modeloVehiculo: selectedRow.modeloVehiculo,
-        servicio: selectedRow.servicio,
-        piezas: selectedRow.piezas,
+        servicioId: selectedRow.servicios[0]?.id || "", // Extraer ID del servicio
+        piezaId: selectedRow.piezas[0]?.id || "",       // Extraer ID de la pieza
         comentarios: selectedRow.comentarios,
         valorPieza: selectedRow.valorPieza,
         tiempo: selectedRow.tiempo,
@@ -30,6 +33,18 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
       });
     }
   }, [selectedRow]);
+
+  useEffect(() => {
+    // Cargar la lista de servicios
+    axios.get('http://localhost:3001/api/servicios')
+      .then(response => setServicios(response.data))
+      .catch(error => console.error('Error al obtener servicios', error));
+
+    // Cargar la lista de piezas
+    axios.get('http://localhost:3001/api/piezas')
+      .then(response => setPiezas(response.data))
+      .catch(error => console.error('Error al obtener piezas', error));
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -70,19 +85,31 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
             onChange={handleInputChange}
           />
           <label>Servicio:</label>
-          <input
-            type="text"
-            name="servicio"
-            value={formData.servicio}
+          <select
+            name="servicioId"
+            value={formData.servicioId}
             onChange={handleInputChange}
-          />
+          >
+            <option value="">Seleccionar Servicio</option>
+            {servicios.map(servicio => (
+              <option key={servicio.id} value={servicio.id}>
+                {servicio.servicio_nombre}
+              </option>
+            ))}
+          </select>
           <label>Piezas:</label>
-          <input
-            type="text"
-            name="piezas"
-            value={formData.piezas}
+          <select
+            name="piezaId"
+            value={formData.piezaId}
             onChange={handleInputChange}
-          />
+          >
+            <option value="">Seleccionar Pieza</option>
+            {piezas.map(pieza => (
+              <option key={pieza.id} value={pieza.id}>
+                {pieza.nombre_pieza}
+              </option>
+            ))}
+          </select>
           <label>Comentarios:</label>
           <input
             type="text"
@@ -90,8 +117,6 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
             value={formData.comentarios}
             onChange={handleInputChange}
           />
-
-
           <label>Estatus:</label>
           <input
             type="text"
