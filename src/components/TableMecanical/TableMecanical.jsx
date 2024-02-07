@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NavBar from './navbar';
 import AgregarDatosModal from './modal';
 import EditarDatosModal from './modalEditar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import './styles.css';
+import Header from '../Header/Header';
 
 
 function TableMecanical() {
@@ -160,7 +160,7 @@ function TableMecanical() {
 
   return (
     <div>
-      <NavBar onOpenAgregarModal={handleOpenAgregarModal} />
+      <Header onOpenAgregarModal={handleOpenAgregarModal} />
       {showAgregarModal && (
         <AgregarDatosModal onClose={handleCloseAgregarModal} onAgregarDatos={handleAgregarDatos} />
       )}

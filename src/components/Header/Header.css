@@ -1,36 +1,45 @@
-/* src/components/Header.css */
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #fff;
-  }
-  
-  .header-container {
-    margin-top: 50px;
-    margin-left: 20px; /* Ajusta el margen izquierdo según sea necesario */
-    margin-right: 20px; /* Ajusta el margen derecho según sea necesario */
-  }
-  
-  .header {
-    background-color: #3498DB;
-    padding: 25px 50px; /* Ajusta el padding para hacer más ancho el Header */
-    border-radius: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .header-title {
-    color: #000;
-    font-size: 18px;
-  }
-  
-  .logout-button {
-    background-color: #00B894;
-    color: #000;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-  }
-  
+  margin: 0;
+  padding: 0;
+  background-image: url('../../../public/img/NARANJA.jpg'); /* Ajusta la ruta según tu estructura de carpetas */
+  background-size: cover; /* Ajusta el tamaño de la imagen */
+  background-repeat: no-repeat; /* Evita la repetición de la imagen */
+  background-position: center; /* Centra la imagen en el fondo */
+  background-attachment: fixed; /* Mantiene la imagen estática al hacer scroll */
+}
+
+.header-container {
+  margin-top: 50px;
+  margin-left: 20px; /* Ajusta el margen izquierdo según sea necesario */
+  margin-right: 20px; /* Ajusta el margen derecho según sea necesario */
+}
+
+.header {
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semi transparente para el encabezado */
+  padding: 25px 50px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para el efecto de transparencia */
+}
+
+.header-title {
+  color: #fff; /* Texto blanco */
+  font-size: 18px;
+}
+
+.logout-button {
+  background-color: rgba(255, 159, 67, 0.7); /* Naranja semi transparente */
+  color: #fff; /* Texto blanco */
+  padding: 8px 15px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #ff9f43; /* Naranja al pasar el cursor */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al pasar el cursor */
+}
