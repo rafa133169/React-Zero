@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
-import EditModal from "./Editmodal";
-import NewModal from "./NewServicesModal";
+import EditModal from "./Editmodal.jsx";
+import NewModal from "./NewServicesModal.jsx";
 import "./ServicesTable.css";
-import Buttons from "../Buttons/Buttons";
-import Header from "../Header/Header";
+import Buttons from "../Buttons/Buttons.js";
+import Header from "../Header/Header.js";
 
 const ServicesTable = () => {
   const [services, setServices] = useState([]);

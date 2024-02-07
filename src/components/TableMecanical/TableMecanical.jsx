@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import './styles.css';
 
+
 function TableMecanical() {
   const [data, setData] = useState([]);
   const [showAgregarModal, setShowAgregarModal] = useState(false);
@@ -14,13 +15,16 @@ function TableMecanical() {
   const [selectedRow, setSelectedRow] = useState(null);
   const [timers, setTimers] = useState({}); // Almacena los temporizadores activos
 
+
   useEffect(() => {
     fetchUsers();
   }, []);
 
+
   useEffect(() => {
     console.log('Data actualizada:', data);
   }, [data]);
+
 
   const fetchUsers = async () => {
     try {
@@ -32,6 +36,8 @@ function TableMecanical() {
     }
   };
 
+
+  
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3001/api/registros_mecanicos/${id}`);

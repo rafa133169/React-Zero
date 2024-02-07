@@ -1,12 +1,11 @@
-// PartsTable.js
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
-import NuevoModal from './NuevoModalParts';
-import EditarModal from './EditarModal';
+import NuevoModalParts from './NuevoModalParts.jsx';
+import EditarModal from './EditarModal.jsx';
 import './PartsTable.css';
-import Buttons from '../Buttons/Buttons';
-import Header from '../Header/Header';
+import Buttons from '../Buttons/Buttons.js';
+import Header from '../Header/Header.js';
 
 const PartsTable = () => {
   const [parts, setParts] = useState([]);
@@ -126,7 +125,7 @@ const PartsTable = () => {
       </button>
 
       {isAddModalVisible && (
-        <NuevoModal
+        <NuevoModalParts
           onCloseModal={handleModalClose}
           onSave={async (formData) => {
             try {

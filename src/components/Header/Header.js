@@ -8,7 +8,7 @@ const Header = () => {
       <div className="header">
         <div className="header-title">Taller-TECH</div>
         <Link to='/'>
-        <button className="logout-button">Cerrar Sesión</button>
+          <button className="logout-button">Cerrar Sesión</button>
         </Link>
       </div>
     </div>

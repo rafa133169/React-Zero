@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import './Table.css';
-import Modal from './Modal';
-import NuevoModal from './NuevoModal';
-import Header from '../Header/Header';
-import Buttons from '../Buttons/Buttons';
+import Modal from './Modal.js';
+import NuevoModal from './NuevoModal.jsx';
+import Header from '../Header/Header.js';
+import Buttons from '../Buttons/Buttons.js';
 
 const Table = () => {
   const [rows, setRows] = useState([]);

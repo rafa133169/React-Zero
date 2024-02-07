@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './NuevoModal.css';
 
-const NuevoModal = ({ onCloseModal, onSave }) => {
+const NuevoModalParts = ({ onCloseModal, onSave }) => {
   const [formData, setFormData] = useState({
     nombre_pieza: '',
     cantidad: '',
@@ -11,19 +11,16 @@ const NuevoModal = ({ onCloseModal, onSave }) => {
   const [validationError, setValidationError] = useState('');
 
   const handleInputChange = (field, value) => {
-    // Validar que todos los campos estén llenos
     if (value.trim() === '') {
       setValidationError('Todos los campos deben llenarse.');
     } else {
       setValidationError('');
     }
 
-    // Validar que en el campo "Precio" solo se ingresen números
     if (field === 'costo' && !/^\d*$/.test(value)) {
       return;
     }
 
-    // Validar que en el campo "Cantidad" solo se ingresen números
     if (field === 'cantidad' && !/^\d*$/.test(value)) {
       return;
     }
@@ -35,7 +32,6 @@ const NuevoModal = ({ onCloseModal, onSave }) => {
   };
 
   const handleSaveClick = () => {
-    // Validar que todos los campos estén llenos antes de guardar
     if (Object.values(formData).some(value => value.trim() === '')) {
       setValidationError('Todos los campos deben llenarse.');
       return;
@@ -91,4 +87,4 @@ const NuevoModal = ({ onCloseModal, onSave }) => {
   );
 };
 
-export default NuevoModal;
+export default NuevoModalParts;

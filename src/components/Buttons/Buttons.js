@@ -39,7 +39,7 @@ const Buttons = () => {
       </Link>
       <Link
         to="/Piezas"
-        className={`button ${selectedButton === 'Piezas' ? 'selected' : ''}`}
+        className={`button ${selectedButton === 'Piezas' ? 'selected' : ''}`}  
         onClick={() => handleButtonClick('Piezas')}
         onMouseEnter={() => handleButtonMouseEnter('Piezas')}
         onMouseLeave={handleButtonMouseLeave}
