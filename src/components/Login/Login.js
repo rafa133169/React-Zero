@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
@@ -12,7 +13,7 @@ const Login = ({ onLogin }) => {
 
     // Verifica si se han ingresado datos
     if (!email || !password) {
-      alert('Por favor, ingresa tu correo y contraseña');
+      setError('Por favor, ingresa tu correo y contraseña');
       return;
     }
 
@@ -26,8 +27,8 @@ const Login = ({ onLogin }) => {
     } else if (email === mecanicoCredentials.email && password === mecanicoCredentials.password) {
       navigate('/VistaMec');
     } else {
-      // Lógica para manejar credenciales incorrectas
-      alert('Credenciales incorrectas');
+      // Muestra un mensaje de error en la interfaz de usuario
+      setError('Credenciales incorrectas');
     }
 
     // Llama a la función onLogin si es necesario
@@ -57,6 +58,7 @@ const Login = ({ onLogin }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {error && <div className="error-message">{error}</div>}
           <button type="submit" className="login-button">
             Iniciar Sesión
           </button>

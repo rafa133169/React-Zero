@@ -1,52 +1,91 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Header from '../Header/Header';
 import AgregarDatosModal from './modal';
 import EditarDatosModal from './modalEditar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import './styles.css';
-import Header from '../Header/Header';
-
 
 function TableMecanical() {
   const [data, setData] = useState([]);
   const [showAgregarModal, setShowAgregarModal] = useState(false);
   const [showEditarModal, setShowEditarModal] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [timers, setTimers] = useState({}); // Almacena los temporizadores activos
-
+  const [selectedRow, setSelectedRow] = useState({});
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-
-  useEffect(() => {
-    console.log('Data actualizada:', data);
-  }, [data]);
-
-
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:3001/api/registros_mecanicos');
+      console.log('Respuesta de la API:', response.data);
       setData(response.data || []);
+
     } catch (error) {
       console.error('Error al obtener datos de la API', error);
       setData([]);
     }
   };
 
-
-  
   const handleDelete = async (id) => {
     try {
+      // Llamada a la API para eliminar el registro
       await axios.delete(`http://localhost:3001/api/registros_mecanicos/${id}`);
-      clearTimer(id);
+
+      // Eliminar la fila
       setData((prevData) => prevData.filter((row) => row.id !== id));
+
       alert('Se borró correctamente');
     } catch (error) {
       console.error('Error al eliminar datos', error);
-      alert('Sucedió un error');
+      alert('Sucedió un error al intentar borrar los datos');
+    }
+  };
+
+  const handleDeleteClick = async (row) => {
+    try {
+      if (!row.id || data.findIndex(item => item.id === row.id) === -1) {
+        console.error('ID de registro no válido o no encontrado');
+        alert('ID de registro no válido o no encontrado');
+        return;
+      }
+  
+      console.log('Intentando eliminar registro con ID:', row.id);
+  
+      const response = await axios.delete(`http://localhost:3001/api/registros_mecanicos/${row.id}`);
+  
+      console.log('Respuesta del servidor:', response);
+  
+      if (response.status === 200) {
+        alert('Se borró correctamente');
+        fetchUsers(); // Actualiza la tabla después de eliminar un registro
+      } else {
+        console.error('Error al eliminar registro');
+        alert('Sucedió un error al intentar borrar los datos');
+      }
+    } catch (error) {
+      console.error('Error al eliminar registro', error);
+      alert('Sucedió un error al intentar borrar los datos');
+    }
+  };
+  
+
+
+  const handleStatusChange = async (id, isChecked) => {
+    const newStatus = isChecked ? 'Terminado' : 'En proceso';
+
+    try {
+      await axios.put(`http://localhost:3001/api/registros_mecanicos/${id}`, { estatus: newStatus });
+
+      setData((prevData) =>
+        prevData.map((row) =>
+          row.id === id ? { ...row, estatus: newStatus } : row
+        )
+      );
+    } catch (error) {
+      console.error('Error al cambiar el estatus', error);
     }
   };
 
@@ -63,10 +102,13 @@ function TableMecanical() {
     try {
       // Lógica de inserción en el modal
       // ...
+
+      // Actualizar la lista de datos después de la inserción
+      fetchUsers();
     } catch (error) {
       console.error('Error al agregar datos', error);
     }
-  }; 
+  };
 
   const handleOpenEditarModal = (row) => {
     setSelectedRow(row);
@@ -100,62 +142,10 @@ function TableMecanical() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-  
+
     const formatNumber = (num) => (num < 10 ? `0${num}` : num);
-  
+
     return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(remainingSeconds)}`;
-  };
-
-  const handleStatusChange = async (id, isChecked) => {
-    const newStatus = isChecked ? 'Terminado' : 'En proceso';
-
-    try {
-      await axios.put(`http://localhost:3001/api/registros_mecanicos/${id}`, { estatus: newStatus });
-
-      setData((prevData) =>
-        prevData.map((row) =>
-          row.id === id ? { ...row, estatus: newStatus } : row
-        )
-      );
-
-      if (isChecked) {
-        // Detener el temporizador si el estatus es "Terminado"
-        clearTimer(id);
-      } else {
-        // Iniciar el temporizador si el estatus es "En proceso"
-        startTimer(id);
-      }
-    } catch (error) {
-      console.error('Error al cambiar el estatus', error);
-    }
-  };
-
-  const startTimer = (id) => {
-    if (!timers[id]) {
-      // Iniciar un temporizador para la fila con el ID proporcionado
-      const timerId = setInterval(() => {
-        setData((prevData) =>
-          prevData.map((row) =>
-            row.id === id ? { ...row, tiempo: (row.tiempo || 0) + 1 } : row
-          )
-        );
-      }, 1000);
-
-      setTimers((prevTimers) => ({
-        ...prevTimers,
-        [id]: timerId,
-      }));
-    }
-  };
-
-  const clearTimer = (id) => {
-    // Detener y limpiar el temporizador asociado al ID proporcionado
-    clearInterval(timers[id]);
-    setTimers((prevTimers) => {
-      const updatedTimers = { ...prevTimers };
-      delete updatedTimers[id];
-      return updatedTimers;
-    });
   };
 
   return (
@@ -168,7 +158,7 @@ function TableMecanical() {
         <EditarDatosModal
           onClose={handleCloseEditarModal}
           onEditarDatos={handleEditarDatos}
-          selectedRow={selectedRow}  // Pasa los datos de la fila seleccionada al modal
+          selectedRow={selectedRow}
         />
       )}
 
@@ -192,66 +182,42 @@ function TableMecanical() {
             </tr>
           </thead>
           <tbody>
-            {data.map((row, index) => (
-              <tr key={index}>
-                <th scope="row">{index + 1}</th>
-                <td>{row.nombreCliente}</td>
-                <td>{row.modeloVehiculo}</td>
-                <td>
-                  {Array.isArray(row.servicios) && row.servicios.length > 0 ? (
-                    row.servicios.map((servicio, index) => {
-                      const servicioObj = typeof servicio === 'string' ? JSON.parse(servicio) : servicio;
-                      return (
-                        <div key={index}>
-                          <p>{`Servicio ${index + 1}: ${servicioObj.servicio_nombre}`}</p>
-                          <p>{`Descripción: ${servicioObj.descripcion}`}</p>
-                          <p>{`Precio: ${servicioObj.precio}`}</p>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    "No disponible"
-                  )}
-                </td>
+          {data.map((row) => (
+  <tr key={row.id}>
+    <th scope="row">{row.id}</th>
+    <td>{row.nombreCliente}</td>
+    <td>{row.modeloVehiculo}</td>
+    <td>
+      {row.servicio_nombre}
+      <br />
+      {"costo: " + row.precio}
+    </td>
+    <td>
+      {row.nombre_pieza} <br />
+      {"costo: " + row.costo}
+    </td>
+    <td>{row.comentarios}</td>
+    <td>{formatTime(row.tiempo)}</td>
+    <td>{row.costoTotal}</td>
+    <td>
+      <input
+        type="checkbox"
+        checked={row.estatus === 'Terminado'}
+        onChange={(e) => handleStatusChange(row.id, e.target.checked)}
+      />
+      {row.estatus === 'Pendiente' ? 'En proceso' : 'Terminado'}
+    </td>
+    <td>
+      <button className="icon-button" onClick={() => handleOpenEditarModal(row)}>
+        <FontAwesomeIcon icon={faEdit} />
+      </button>{" "}
+      <button className="icon-button" onClick={() => handleDeleteClick(row)}>
+        <FontAwesomeIcon icon={faTrash} />
+      </button>
+    </td>
+  </tr>
+))}
 
-                <td>
-                  {Array.isArray(row.piezas) && row.piezas.length > 0 ? (
-                    row.piezas.map((pieza, index) => {
-                      const piezaObj = typeof pieza === 'string' ? JSON.parse(pieza) : pieza;
-                      return (
-                        <div key={index}>
-                          <p>{`Pieza ${index + 1}: ${piezaObj.nombre_pieza}`}</p>
-                          <p>{`Cantidad: ${piezaObj.cantidad}`}</p>
-                          <p>{`Costo: ${piezaObj.costo}`}</p>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    "No disponible"
-                  )}
-                </td>
-                <td>{row.comentarios}</td>
-                <td>{formatTime(row.tiempo)}</td>
-                <td>{row.costoTotal}</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={row.estatus === 'Terminado'}
-                    onChange={(e) => handleStatusChange(row.id, e.target.checked)}
-                  />
-                  {row.estatus === 'En proceso' ? 'En proceso' : 'Terminado'}
-                </td>
-                <td>
-                  <button className="icon-button" onClick={() => handleOpenEditarModal(row)}>
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
-                  {"    "}
-                  <button className="icon-button" onClick={() => handleDelete(row.id)}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </td>
-              </tr>
-            ))}
           </tbody>
         </table>
       </div>
