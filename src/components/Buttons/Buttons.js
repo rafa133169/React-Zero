@@ -19,7 +19,7 @@ const Buttons = () => {
 
   return (
     <div className="buttons-container">
-      <Link
+      {/* <Link
         to="/Mecanicos"
         className={`button ${selectedButton === 'Mecanicos' ? 'selected' : ''}`}
         onClick={() => handleButtonClick('Mecanicos')}
@@ -27,7 +27,7 @@ const Buttons = () => {
         onMouseLeave={handleButtonMouseLeave}
       >
         Mecánicos
-      </Link>
+      </Link> */}
       <Link
         to="/Servicios"
         className={`button ${selectedButton === 'Servicios' ? 'selected' : ''}`}

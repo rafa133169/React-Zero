@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login/Login.js';
 import Header from './components/Header/Header.js';
 import Buttons from './components/Buttons/Buttons.js';
-import Table from './components/Table/Table.js';
+// import Table from './components/Table/Table.js';
 import ServicesTable from './components/ServicesTable/ServicesTable.js';
 import PartsTable from './components/PartsTable/PartsTable.js';
 import TableMecanical from './components/TableMecanical/TableMecanical.jsx';
@@ -54,7 +54,7 @@ function App() {
           <Route path="/home" element={<PrivateRoute><Home user={user} /></PrivateRoute>} />
           <Route path="/header" element={<PrivateRoute><Header /></PrivateRoute>} />
           <Route path="/buttons" element={<PrivateRoute><Buttons /></PrivateRoute>} />
-          <Route path="/mecanicos" element={<PrivateRoute ><Table /></PrivateRoute>} />
+          {/* <Route path="/mecanicos" element={<PrivateRoute ><Table /></PrivateRoute>} /> */}
           <Route path="/servicios" element={<PrivateRoute ><ServicesTable /></PrivateRoute>} />
           <Route path="/piezas" element={<PrivateRoute><PartsTable /></PrivateRoute>} />
           <Route path="/vistamec" element={<PrivateRoute><TableMecanical /></PrivateRoute>} />

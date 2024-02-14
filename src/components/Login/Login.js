@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import './Login.css';
+
+// Importa las funciones necesarias de Firebase
 import firebaseApp from '../firebase/credenciales.js';
-import {   getAuth,signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
+// Importa el hook de navegación
 import { useNavigate } from 'react-router-dom';
 
+// Configura la autenticación de Firebase
 const auth = getAuth(firebaseApp);
 
 function Login() {
@@ -30,20 +35,26 @@ function Login() {
   }
 
   return (
-    <div>
-      <h1>Inicia sesión</h1>
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      <form onSubmit={submitHandler}>
-        <label>
-          Correo electrónico:
-          <input type="email" id="email" required />
-        </label>
-        <label>
-          Contraseña:
-          <input type="password" id="password" required />
-        </label>
-        <input type="submit" value="Iniciar sesión" />
-      </form>
+    <div className="login-container"> 
+      <div className="login-card"> 
+        <h1>Inicia sesión</h1>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        <form onSubmit={submitHandler}>
+          <div className="input-group"> 
+            <label className="label"> 
+              Correo electrónico:
+              <input type="email" id="email" required />
+            </label>
+          </div>
+          <div className="input-group"> 
+            <label className="label">
+              Contraseña:
+              <input type="password" id="password" required />
+            </label>
+          </div>
+          <input type="submit" value="Iniciar sesión" className="login-button" />
+        </form>
+      </div>
     </div>
   );
 }
