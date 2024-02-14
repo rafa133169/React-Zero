@@ -1,5 +1,9 @@
-/* En tu archivo Login.css */
+/* Estilo para el mensaje de error */
+.error-message {
+    color: white;
+}
 
+/* Estilo para el contenedor del login */
 .login-container {
     display: flex;
     align-items: center;
@@ -11,6 +15,7 @@
     background-color: #fff;
 }
 
+/* Estilo para la tarjeta de login */
 .login-card {
     background-color: rgba(50, 50, 50, 0.7);
     padding: 100px 50px;
@@ -25,19 +30,22 @@
     justify-content: space-between;
 }
 
+/* Estilo para el título, subtítulo, etiquetas y botón */
 h2,
 .login-card p,
 .label,
 .login-card label,
-.login-button { /* Agregar el botón al selector */
+.login-button {
     color: #fff; /* Cambiar el color del título, subtítulo, etiquetas y botón a blanco */
 }
 
+/* Estilo para el grupo de entrada */
 .input-group {
     margin: 20px 0;
     text-align: left;
 }
 
+/* Estilo para el campo de entrada */
 input {
     width: 100%;
     padding: 12px;
@@ -48,10 +56,12 @@ input {
     color: #000; /* Cambiar el color del texto dentro de los campos de entrada a negro */
 }
 
+/* Estilo para el texto de marcador de posición del campo de entrada */
 input::placeholder {
     color: transparent;
 }
 
+/* Estilo para el botón de login */
 .login-button {
     background-color: rgba(50, 50, 50, 0.7);
     padding: 14px 20px;
@@ -60,8 +70,10 @@ input::placeholder {
     cursor: pointer;
     font-size: 16px;
     font-weight: normal;
+    margin-top: 20px; /* Ajustar el margen superior del botón */
 }
 
+/* Estilo para el botón de login al pasar el mouse */
 .login-button:hover {
     background-color: rgba(30, 30, 30, 0.7);
 }
