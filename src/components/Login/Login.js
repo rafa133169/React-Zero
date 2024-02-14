@@ -1,71 +1,51 @@
 import React, { useState } from 'react';
 import './Login.css';
+import firebaseApp from '../firebase/credenciales.js';
+import {   getAuth,signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const auth = getAuth(firebaseApp);
+
+function Login() {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleLogin = (e) => {
+  async function iniciarSesion(email, password) {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/home');
+    } catch (error) {
+      setErrorMessage("Credenciales inválidas. Por favor, intenta nuevamente.");
+    }
+  }
+
+  function submitHandler(e) {
     e.preventDefault();
+    setErrorMessage(""); 
 
-    // Verifica si se han ingresado datos
-    if (!email || !password) {
-      setError('Por favor, ingresa tu correo y contraseña');
-      return;
-    }
+    const email = e.target.elements.email.value;
+    const password = e.target.elements.password.value;
 
-    // Credenciales ficticias para las pruebas
-    const adminCredentials = { email: 'admin@mecanicos.com', password: 'admin' };
-    const mecanicoCredentials = { email: 'mecanico@mecanicos.com', password: 'mecanico' };
-
-    // Verifica las credenciales aquí
-    if (email === adminCredentials.email && password === adminCredentials.password) {
-      navigate('/Mecanicos');
-    } else if (email === mecanicoCredentials.email && password === mecanicoCredentials.password) {
-      navigate('/VistaMec');
-    } else {
-      // Muestra un mensaje de error en la interfaz de usuario
-      setError('Credenciales incorrectas');
-    }
-
-    // Llama a la función onLogin si es necesario
-    onLogin();
-  };
+    iniciarSesion(email, password);
+  }
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2>Taller-TECH</h2>
-        <form onSubmit={handleLogin}>
-          <div className="input-group">
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="Ingrese su correo"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="input-group">
-            <label>Contraseña</label>
-            <input
-              type="password"
-              placeholder="Ingrese su contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <button type="submit" className="login-button">
-            Iniciar Sesión
-          </button>
-        </form>
-      </div>
+    <div>
+      <h1>Inicia sesión</h1>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+      <form onSubmit={submitHandler}>
+        <label>
+          Correo electrónico:
+          <input type="email" id="email" required />
+        </label>
+        <label>
+          Contraseña:
+          <input type="password" id="password" required />
+        </label>
+        <input type="submit" value="Iniciar sesión" />
+      </form>
     </div>
   );
-};
+}
 
 export default Login;
