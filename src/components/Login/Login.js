@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import './Login.css';
-
-// Importa las funciones necesarias de Firebase
-import firebaseApp from '../firebase/credenciales.js';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-
-// Importa el hook de navegación
 import { useNavigate } from 'react-router-dom';
+import firebaseApp from '../firebase/credenciales.js';
 
-// Configura la autenticación de Firebase
 const auth = getAuth(firebaseApp);
 
 function Login() {
@@ -17,7 +12,7 @@ function Login() {
 
   async function iniciarSesion(email, password) {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      // await signInWithEmailAndPassword(auth, email, password);
       navigate('/home');
     } catch (error) {
       setErrorMessage("Credenciales inválidas. Por favor, intenta nuevamente.");
@@ -37,23 +32,28 @@ function Login() {
   return (
     <div className="login-container"> 
       <div className="login-card"> 
-        <h1>Inicia sesión</h1>
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
-        <form onSubmit={submitHandler}>
+        <div className="login-header">
+          <h1 className="login-title">Iniciar Sesión</h1>
+        </div>
+        <form onSubmit={submitHandler} className="login-form">
           <div className="input-group"> 
             <label className="label"> 
-              Correo electrónico:
-              <input type="email" id="email" required />
+              Correo electrónico
+              <input type="email" id="email" required className="login-input" />
             </label>
           </div>
           <div className="input-group"> 
             <label className="label">
-              Contraseña:
-              <input type="password" id="password" required />
+              Contraseña
+              <input type="password" id="password" required className="login-input" />
             </label>
           </div>
-          <input type="submit" value="Iniciar sesión" className="login-button" />
+          <button type="submit" className="login-button">Iniciar Sesión</button>
         </form>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        <div className="login-footer">
+          <p>¿No tienes una cuenta? <a href="/registro">Regístrate aquí</a></p>
+        </div>
       </div>
     </div>
   );

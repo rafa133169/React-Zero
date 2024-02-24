@@ -1,6 +1,8 @@
 /* Estilo para el mensaje de error */
 .error-message {
-    color: white;
+    color: #e74c3c;
+    font-size: 14px;
+    margin-bottom: 15px;
 }
 
 /* Estilo para el contenedor del login */
@@ -9,71 +11,99 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background: linear-gradient(to bottom right, #aaa9ff, rgb(135, 196, 247));
-    background-size: cover;
-    background-position: center;
-    background-color: #fff;
+    background: linear-gradient(to bottom right, #3498db, #2980b9);
+    background-image: url('../../img/background.jpg'); /* Reemplaza con la ruta de tu imagen */
+    background-size: cover; /* Ajusta la imagen al tamaño del contenedor */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    #login-container {
+        /* Estilo para el contenedor del login con imagen de fondo */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+   
+}
+
+/* Resto de tus estilos... */
+
+        
+      }      
 }
 
 /* Estilo para la tarjeta de login */
 .login-card {
-    background-color: rgba(50, 50, 50, 0.7);
-    padding: 100px 50px;
-    border-radius: 42px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     text-align: center;
     width: 400px;
     margin: 50px auto;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    border: 2px solid #3498db;
+    box-sizing: border-box;
 }
 
-/* Estilo para el título, subtítulo, etiquetas y botón */
-h2,
-.login-card p,
-.label,
-.login-card label,
-.login-button {
-    color: #fff; /* Cambiar el color del título, subtítulo, etiquetas y botón a blanco */
+/* Estilo para el título */
+.login-title {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 /* Estilo para el grupo de entrada */
 .input-group {
     margin: 20px 0;
-    text-align: left;
 }
 
 /* Estilo para el campo de entrada */
-input {
+.input-group input {
     width: 100%;
     padding: 12px;
-    border: 1px solid #000;
+    border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
     margin-bottom: 15px;
-    color: #000; /* Cambiar el color del texto dentro de los campos de entrada a negro */
+    color: #333;
 }
 
 /* Estilo para el texto de marcador de posición del campo de entrada */
-input::placeholder {
-    color: transparent;
+.input-group input::placeholder {
+    color: #888;
 }
 
 /* Estilo para el botón de login */
 .login-button {
-    background-color: rgba(50, 50, 50, 0.7);
+    background-color: #3498db;
     padding: 14px 20px;
     border: none;
-    border-radius: 50px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    font-weight: normal;
-    margin-top: 20px; /* Ajustar el margen superior del botón */
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
 /* Estilo para el botón de login al pasar el mouse */
 .login-button:hover {
-    background-color: rgba(30, 30, 30, 0.7);
+    background-color: #2980b9;
+}
+
+/* Estilo para el pie de página */
+.login-footer {
+    margin-top: 20px;
+    color: #555;
+}
+
+/* Estilo para el enlace de registro en el pie de página */
+.login-footer a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Estilo para el enlace de registro al pasar el mouse */
+.login-footer a:hover {
+    text-decoration: underline;
 }
