@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from '../Header/Header';
-import AgregarDatosModal from './modal';
-import EditarDatosModal from './modalEditar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import './styles.css';
 
-function TableMecanical() {
+import './stylesT.css';
+
+function TableMecanicalT() {
   const [data, setData] = useState([]);
   const [showAgregarModal, setShowAgregarModal] = useState(false);
   const [showEditarModal, setShowEditarModal] = useState(false);
@@ -97,27 +94,11 @@ function TableMecanical() {
   };
 
   return (
-
     <div>
-
-
       <Header onOpenAgregarModal={handleOpenAgregarModal} />
-      {showAgregarModal && (
-        <AgregarDatosModal onClose={handleCloseAgregarModal} onAgregarDatos={handleAgregarDatos} />
-      )}
-      {showEditarModal && (
-        <EditarDatosModal
-          onClose={handleCloseEditarModal}
-          onEditarDatos={handleEditarDatos}
-          selectedRow={selectedRow}
-        />
-      )}
-       <div style={{ textAlign: 'center' }}>
-        <h1>Servicios pendientes</h1>
+      <div style={{ textAlign: 'center' }}>
+        <h1>Servicios concluidos</h1>
       </div>
-      <button className="add-button" onClick={handleOpenAgregarModal}>
-        Agregar Servicio
-      </button>
       <div className="flex justify-center">
         <table className="my-table">
           <thead>
@@ -130,7 +111,6 @@ function TableMecanical() {
               <th>Horas de Tranajo</th>
               <th>Costo Total</th>
               <th>Estatus</th>
-              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -160,20 +140,7 @@ function TableMecanical() {
                 <td>{row.tiempo}</td> {/* Display tiempo directly from the database */}
                 <td>{row.costoTotal}</td>
                 <td>
-                  <input
-                    type="checkbox"
-                    checked={row.estatus === 'Terminado'}
-                    onChange={(e) => handleStatusChange(row.id, e.target.checked)}
-                  />
                   {row.estatus === 'En proceso' ? 'En proceso' : 'Terminado'}
-                </td>
-                <td>
-                  <button className="icon-button" onClick={() => handleOpenEditarModal(row)}>
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>{" "}
-                  <button className="icon-button" onClick={() => handleDelete(row.id)}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
                 </td>
               </tr>
             ))}
@@ -184,4 +151,4 @@ function TableMecanical() {
   );
 }
 
-export default TableMecanical;
+export default TableMecanicalT;

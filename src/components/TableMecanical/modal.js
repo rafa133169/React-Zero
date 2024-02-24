@@ -10,6 +10,7 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
     piezas: [],
     comentarios: '',
     costoTotal: 0,
+    tiempo: 0, // Agregando el campo para el tiempo
   });
 
   const [servicios, setServicios] = useState([]);
@@ -24,9 +25,9 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
   }, []);
 
   useEffect(() => {
-    // Recalcular el costo total cada vez que servicios o piezas cambian
+    // Recalcular el costo total cada vez que servicios, piezas o tiempo cambian
     calcularCostoTotal();
-  }, [formData.servicios, formData.piezas]);
+  }, [formData.servicios, formData.piezas, formData.tiempo]);
 
   const cargarServicios = async () => {
     try {
@@ -51,14 +52,16 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
     const nuevosDatos = {
       nombreCliente: formData.nombreCliente,
       modeloVehiculo: formData.modeloVehiculo,
-      servicio_id: formData.servicios.map((servicio) => servicio.id), // Mapear solo los IDs de los servicios seleccionados
-      piezas_id: formData.piezas.map((pieza) => pieza.id), // Mapear solo los IDs de las piezas seleccionadas
+      servicio_id: formData.servicios.map((servicio) => servicio.id),
+      piezas_id: formData.piezas.map((pieza) => pieza.id),
       comentarios: formData.comentarios,
       costoTotal: formData.costoTotal,
+      estatus: 'En proceso',
+      tiempo: formData.tiempo, // Incluir el tiempo en los datos enviados
     };
-  
+
     console.log('Datos a enviar:', nuevosDatos);
-  
+
     try {
       const response = await axios.post('http://localhost:3001/api/registros_mecanicos', nuevosDatos);
       if (response.data.success) {
@@ -91,9 +94,10 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
   const calcularCostoTotal = () => {
     const costoServicios = formData.servicios.reduce((total, servicio) => total + servicio.precio, 0);
     const costoPiezas = formData.piezas.reduce((total, pieza) => total + pieza.costo, 0);
+    const costoTiempo = formData.tiempo * 350; // Calcular el costo por tiempo
     setFormData(prevData => ({
       ...prevData,
-      costoTotal: costoServicios + costoPiezas,
+      costoTotal: costoServicios + costoPiezas + costoTiempo, // Sumar el costo por tiempo al costo total
     }));
   };
 
@@ -140,6 +144,14 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
           type="text"
           name="comentarios"
           value={formData.comentarios}
+          onChange={handleInputChange}
+        />
+
+        <label>Tiempo:</label> 
+        <input
+          type="number"
+          name="tiempo"
+          value={formData.tiempo}
           onChange={handleInputChange}
         />
 

@@ -7,6 +7,7 @@ import Buttons from './components/Buttons/Buttons.js';
 import ServicesTable from './components/ServicesTable/ServicesTable.js';
 import PartsTable from './components/PartsTable/PartsTable.js';
 import TableMecanical from './components/TableMecanical/TableMecanical.jsx';
+import TableMecanicalT from './components/ServicioT/TableMecanical.jsx';
 import Home from './components/Header/Home.js'; // Asegúrate de que este componente exista si planeas usarlo
 import firebaseApp from './components/firebase/credenciales.js'; // Ajusta esta ruta según la estructura de tu proyecto
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -58,7 +59,7 @@ function App() {
           <Route path="/servicios" element={<PrivateRoute ><ServicesTable /></PrivateRoute>} />
           <Route path="/piezas" element={<PrivateRoute><PartsTable /></PrivateRoute>} />
           <Route path="/vistamec" element={<PrivateRoute><TableMecanical /></PrivateRoute>} />
-      
+          <Route path="/vistamecT" element={<PrivateRoute><TableMecanicalT /></PrivateRoute>} />
         </Routes>
       </div>
     </Router>

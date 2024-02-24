@@ -9,7 +9,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-image: url('../../../public/img/Charyer.jpg');
+    background: linear-gradient(to bottom right, #aaa9ff, rgb(135, 196, 247));
     background-size: cover;
     background-position: center;
     background-color: #fff;

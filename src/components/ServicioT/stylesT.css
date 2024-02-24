@@ -8,7 +8,7 @@ body {
   background-size: cover; /* Ajusta el tamaño de la imagen de fondo */
   background-repeat: no-repeat; /* Evita la repetición de la imagen */
   background-position: center; /* Centra la imagen en el fondo */
-  background-attachment: fixed; /* Mantiene la imagen estática al hacer scroll */
+
 }
 
 /* Estilos del encabezado */
@@ -49,44 +49,27 @@ body {
 }
 
 /* Estilos de la tabla */
-table {
-  width: calc(100% - 40px);
+.my-table {
   border-collapse: collapse;
-  margin: 0 auto;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.8); /* Negro transparente */
-  color: white; /* Texto blanco */
+  border: 1px solid #2d2d2d;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+  border-radius: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+  background-color: rgba(0, 0, 0, 0.8); /* Hace la tabla transparente de color negro */
+  color: white; /* Cambia el color del texto a blanco */
 }
 
-th, td {
-  border: none; /* Elimina las líneas de las celdas */
-  padding: 10px; /* Ajusta el espaciado interno de las celdas */
-  text-align: left;
-}
-
-.additional-table {
-  width: calc(100% - 40px);
-  border-collapse: collapse;
-  margin: 0 auto;
-  margin-top: 10px;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #ff8a0d; /* Actualizado al color verde suave */
-}
-
-/* Botón de agregar */
-button.add-button {
-  background-color: #ff9100; /* Negro */
-  color: #ffffff; /* Blanco */
-  padding: 10px 20px; /* Ajustar el padding para hacer el botón más compacto */
-  border: none; /* Elimina el borde del botón */
-  border-radius: 15px; /* Ajustar el radio de los bordes del botón */
+/* Estilos del botón de agregar servicios */
+.add-button {
+  background-color: #ff9f43; /* Naranja */
+  color: #fff; /* Texto blanco */
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
   cursor: pointer;
-  font-weight: bold;
-  margin-top: 10px; /* Ajusta la separación superior */
-  margin-right: 20px; /* Ajusta el margen derecho para alejar del borde */
-  margin-bottom: 10px; /* Ajusta la separación desde la parte inferior */
-  float: right; /* Alinea el botón a la derecha */
+}
+
+.add-button:hover {
+  background-color: #ffbf70; /* Naranja más claro al pasar el cursor */
 }

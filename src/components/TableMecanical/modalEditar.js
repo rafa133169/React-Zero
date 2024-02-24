@@ -6,13 +6,12 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
   const [formData, setFormData] = useState({
     nombreCliente: "",
     modeloVehiculo: "",
-    servicioId: "",  // Usar el ID del servicio en lugar del nombre
-    piezaId: "",     // Usar el ID de la pieza en lugar del nombre
+    servicioId: "",  
+    piezaId: "",     
     comentarios: "",
-    valorPieza: "",
-    tiempo: "",
-    precioTotal: "",
+    costoTotal: 0,
     estatus: "",
+    tiempo: 0 // Agregar tiempo al estado inicial
   });
 
   const [servicios, setServicios] = useState([]);
@@ -23,28 +22,38 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
       setFormData({
         nombreCliente: selectedRow.nombreCliente,
         modeloVehiculo: selectedRow.modeloVehiculo,
-        servicioId: selectedRow.servicios[0]?.id || "", // Extraer ID del servicio
-        piezaId: selectedRow.piezas[0]?.id || "",       // Extraer ID de la pieza
+        servicioId: selectedRow.servicio_id || "", 
+        piezaId: selectedRow.piezas_id || "",       
         comentarios: selectedRow.comentarios,
-        valorPieza: selectedRow.valorPieza,
-        tiempo: selectedRow.tiempo,
-        precioTotal: selectedRow.precioTotal,
+        costoTotal: selectedRow.costoTotal,
         estatus: selectedRow.estatus,
+        tiempo: selectedRow.tiempo || 0 // Agregar tiempo del registro actual
       });
     }
   }, [selectedRow]);
 
   useEffect(() => {
-    // Cargar la lista de servicios
-    axios.get('http://localhost:3001/api/servicios')
-      .then(response => setServicios(response.data))
-      .catch(error => console.error('Error al obtener servicios', error));
-
-    // Cargar la lista de piezas
-    axios.get('http://localhost:3001/api/piezas')
-      .then(response => setPiezas(response.data))
-      .catch(error => console.error('Error al obtener piezas', error));
+    cargarServicios();
+    cargarPiezas();
   }, []);
+
+  const cargarServicios = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/servicios');
+      setServicios(response.data);
+    } catch (error) {
+      console.error('Error al obtener servicios:', error);
+    }
+  };
+
+  const cargarPiezas = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/piezas');
+      setPiezas(response.data);
+    } catch (error) {
+      console.error('Error al obtener piezas:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,9 +63,37 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
     }));
   };
 
-  const handleSaveChanges = () => {
-    onEditarDatos(formData);
-    onClose();
+  const calcularCostoTotal = () => {
+    const selectedServicio = servicios.find(servicio => servicio.id === parseInt(formData.servicioId));
+    const selectedPieza = piezas.find(pieza => pieza.id === parseInt(formData.piezaId));
+    const costoServicio = selectedServicio ? selectedServicio.precio : 0;
+    const costoPieza = selectedPieza ? selectedPieza.costo : 0;
+    const costoTiempo = formData.tiempo * 350; // Calcular el costo por tiempo
+    const costoTotal = costoServicio + costoPieza + costoTiempo; // Sumar el costo por tiempo al costo total
+    return costoTotal;
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const costoTotal = calcularCostoTotal();
+
+      await axios.put(`http://localhost:3001/api/registros_mecanicos/${selectedRow.id}`, {
+        nombreCliente: formData.nombreCliente,
+        modeloVehiculo: formData.modeloVehiculo,
+        comentarios: formData.comentarios,
+        costoTotal: costoTotal,
+        estatus: formData.estatus,
+        servicio_id: parseInt(formData.servicioId),
+        piezas_id: parseInt(formData.piezaId),
+        tiempo: formData.tiempo // Agregar tiempo
+      });
+
+      onClose();
+      alert('Los cambios se guardaron correctamente.');
+    } catch (error) {
+      console.error('Error al guardar los cambios:', error.message);
+      alert('Se produjo un error al intentar guardar los cambios.');
+    }
   };
 
   const handleCancel = () => {
@@ -64,8 +101,8 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
+    <div className="modal-overlay" onClick={handleCancel}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
         <span className="close" onClick={handleCancel}>
           &times;
         </span>
@@ -97,7 +134,7 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
               </option>
             ))}
           </select>
-          <label>Piezas:</label>
+          <label>Pieza:</label>
           <select
             name="piezaId"
             value={formData.piezaId}
@@ -124,6 +161,14 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
             value={formData.estatus}
             onChange={handleInputChange}
           />
+          <label>Tiempo:</label>
+          <input
+            type="number"
+            name="tiempo"
+            value={formData.tiempo}
+            onChange={handleInputChange}
+          />
+          <p>Costo Total: {calcularCostoTotal()}</p>
           <div className="button-container">
             <button
               type="button"
